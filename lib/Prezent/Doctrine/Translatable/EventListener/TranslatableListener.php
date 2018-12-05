@@ -253,9 +253,9 @@ class TranslatableListener implements EventSubscriber
         }
 
         if ($metadata = $this->metadataFactory->getMetadataForClass($className)) {
-            if (!$metadata->reflection->isAbstract()) {
+            //if (!$metadata->reflection->isAbstract()) {
                 $metadata->validate();
-            }
+            //}
         }
 
         $this->cache[$className] = $metadata;
@@ -300,12 +300,21 @@ class TranslatableListener implements EventSubscriber
         $metadata = $this->getTranslatableMetadata(get_class($entity));
 
         if ($metadata instanceof TranslatableMetadata) {
+            // @link https://github.com/schmittjoh/metadata/blob/master/UPGRADING.md
+            // @link https://github.com/schmittjoh/metadata/blob/e5854ab1aa643623dc64adde718a8eec32b957a8/src/Metadata/PropertyMetadata.php
+            //
+            // "getValue and setValue methods have been removed from Metadata\PropertyMetadata, getting/setting properties is not responsibility of this library anymore"
+
             if ($metadata->fallbackLocale) {
-                $metadata->fallbackLocale->setValue($entity, $this->getFallbackLocale());
+                $reflectionProperty = new \ReflectionProperty(get_class($entity), 'fallbackLocale');
+                $reflectionProperty->setAccessible(true);
+                $reflectionProperty->setValue($entity, $this->getFallbackLocale());
             }
 
             if ($metadata->currentLocale) {
-                $metadata->currentLocale->setValue($entity, $this->getCurrentLocale());
+                $reflectionProperty = new \ReflectionProperty(get_class($entity), 'currentLocale');
+                $reflectionProperty->setAccessible(true);
+                $reflectionProperty->setValue($entity, $this->getCurrentLocale());
             }
         }
     }

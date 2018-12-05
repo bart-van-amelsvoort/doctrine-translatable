@@ -12,6 +12,7 @@ namespace Prezent\Doctrine\Translatable\Mapping\Driver;
 use Doctrine\Common\Persistence\Mapping\Driver\FileLocator;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Metadata\Driver\DriverInterface;
+use Metadata\ClassMetadata;
 use Prezent\Doctrine\Translatable\Mapping\TranslatableMetadata;
 use Prezent\Doctrine\Translatable\Mapping\TranslationMetadata;
 
@@ -36,7 +37,7 @@ abstract class FileDriver implements DriverInterface
      * @param \ReflectionClass $class
      * @return \Metadata\ClassMetadata
      */
-    public function loadMetadataForClass(\ReflectionClass $class)
+    public function loadMetadataForClass(\ReflectionClass $class): ?ClassMetadata
     {
         if ($class->implementsInterface('Prezent\\Doctrine\\Translatable\\TranslatableInterface')) {
             return $this->loadTranslatableMetadata($class->name, $this->readMapping($class->name));
@@ -45,6 +46,8 @@ abstract class FileDriver implements DriverInterface
         if ($class->implementsInterface('Prezent\\Doctrine\\Translatable\\TranslationInterface')) {
             return $this->loadTranslationMetadata($class->name, $this->readMapping($class->name));
         }
+
+        return null;
     }
 
     /**
