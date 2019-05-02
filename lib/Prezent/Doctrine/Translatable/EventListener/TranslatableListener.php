@@ -172,7 +172,7 @@ class TranslatableListener implements EventSubscriber
                 'fieldName'     => $metadata->translations->name,
                 'targetEntity'  => $metadata->targetEntity,
                 'mappedBy'      => $targetMetadata->translatable->name,
-                'fetch'         => ClassMetadataInfo::FETCH_EXTRA_LAZY,
+                'fetch'         => ClassMetadataInfo::FETCH_EAGER,
                 'indexBy'       => $targetMetadata->locale->name,
                 'cascade'       => array('persist', 'merge', 'remove'),
                 'orphanRemoval' => true,
